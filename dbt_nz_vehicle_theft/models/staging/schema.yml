@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: staging
+    database: NZ_VEHICLE_THEFT
+    schema: STAGING
+    tables:
+      - name: STG_STOLEN_VEHICLES
+        description: "Cleaned and enriched vehicle theft data loaded from AWS Glue"
+        columns:
+          - name: vehicle_id
+            description: "Unique ID of the stolen vehicle"
+            tests:
+              - not_null
+          - name: make_id
+            description: "Foreign key to vehicle make"
+          - name: location_id
+            description: "Foreign key to region/location"
