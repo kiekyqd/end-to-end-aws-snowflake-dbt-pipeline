@@ -84,10 +84,10 @@ The architecture ensures that each component is loosely coupled yet easily orche
 
 ![airflow graph](https://github.com/user-attachments/assets/ae3b9c47-9104-4982-a5f5-efb224233077)
 
+
 ### 8. Final Data Validation in Snowflake
-- Performed post-orchestration validation to confirm all transformed tables were successfully populated in Snowflake.
-- Verified that transformed data was successfully loaded into Snowflake.
-- Tables were populated correctly after the DAG execution.
+- Performed post-orchestration validation to confirm that all transformed tables were successfully populated and aligned with dbt models.
+- Verified data integrity, table structure, and successful population after full DAG execution.
 ![snowflake2](https://github.com/user-attachments/assets/28b5f426-bb57-4519-b051-ce75421bdb3c)
 
 
