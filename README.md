@@ -23,6 +23,24 @@ The pipeline processes raw CSV data through AWS services and Snowflake, with orc
 | Orchestration and Scheduling  | AWS MWAA (Managed Workflows for Apache Airflow) |
 
 ## Architecture Overview
+This project follows a modular, cloud-native architecture that ensures scalability, reliability, and automation across all stages of the data pipeline.
+The pipeline is designed to efficiently process raw CSV data into structured warehouse tables using a combination of AWS services, Snowflake, dbt Cloud, and Apache Airflow (MWAA).
+
+### Key Components:
+- **AWS S3** acts as the raw and cleaned data storage layer.
+
+- **AWS Glue** handles ETL processing, including data cleaning, schema enforcement, and dataset enrichment using PySpark jobs.
+
+- **AWS Glue Crawler** and **AWS Athena** are used for schema discovery and ad-hoc data exploration.
+
+- **Snowflake** serves as the centralized data warehouse where cleaned and enriched data is loaded for analytics.
+
+- **dbt Cloud** is used for data modeling, transformation into dimensional models, and applying data quality tests.
+
+- **Apache Airflow (MWAA)** orchestrates the workflow, coordinating ETL jobs and dbt model runs to ensure seamless pipeline execution.
+
+The architecture ensures that each component is loosely coupled yet easily orchestrated through Airflow, making the pipeline highly maintainable and extensible for future enhancements.
+
 
 ## Pipeline Steps
 
@@ -61,12 +79,13 @@ The pipeline processes raw CSV data through AWS services and Snowflake, with orc
 - Created an Airflow DAG to:
   - Sequentially execute AWS Glue ETL jobs.
   - Trigger the dbt Cloud job for modeling after data loading.
-- Successfully tested both manual and scheduled executions.
+- Successfully tested both manual runs and scheduled executions to ensure end-to-end automation.
 ![running on scheduled](https://github.com/user-attachments/assets/7bf66643-be8e-4716-b77b-d09239bbb8b9)
 
 ![airflow graph](https://github.com/user-attachments/assets/ae3b9c47-9104-4982-a5f5-efb224233077)
 
 ### 8. Final Data Validation in Snowflake
+- Performed post-orchestration validation to confirm all transformed tables were successfully populated in Snowflake.
 - Verified that transformed data was successfully loaded into Snowflake.
 - Tables were populated correctly after the DAG execution.
 ![snowflake2](https://github.com/user-attachments/assets/28b5f426-bb57-4519-b051-ce75421bdb3c)
@@ -79,6 +98,16 @@ The pipeline processes raw CSV data through AWS services and Snowflake, with orc
 - Configured Glue Crawlers to infer schema from S3 cleaned data.
 - Established secure Snowflake credentials (API token) for dbt Cloud transformations.
 
+## Repository Structure
+
+| Folder / File                     | Description                                        |
+|------------------------------------|----------------------------------------------------|
+| `glue_jobs/`                       | AWS Glue PySpark scripts and exploration notebook  |
+| `dags/`                            | Airflow DAG for pipeline orchestration             |
+| `snowflake/`                       | Manual Snowflake SQL scripts (COPY INTO + validation) |
+| `dbt_nz_vehicle_theft/`             | dbt project root (models, seeds, tests)             |
+| `dbt_nz_vehicle_theft/models/`      | dbt models for Snowflake transformation            |
+| `README.md`                        | Project documentation (this file)                  |
 
 ## Notes
 > **Without initial AWS Glue cleaning, the raw files could not be reliably loaded or queried.**  
