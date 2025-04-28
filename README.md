@@ -6,6 +6,11 @@ It showcases skills in batch data ingestion, cloud orchestration, ETL processing
 
 The pipeline processes raw CSV data through AWS services and Snowflake, with orchestration handled by Apache Airflow (MWAA) and transformation by dbt Cloud.
 
+## Data Source
+- Dataset: [NZ Crime Chronicles: Motor Vehicle Theft Patterns](https://www.kaggle.com/datasets/agungpambudi/nz-crime-chronicles-motor-vehicle-theft-patterns)  
+- Files used: `locations.csv`, `make_details.csv`, `stolen_vehicles.csv`
+
+
 ## Tools and Technologies Used
 
 | Area                         | Tools                                    |
