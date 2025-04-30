@@ -44,42 +44,46 @@ The architecture ensures that each component is loosely coupled yet easily orche
 
 ## Pipeline Steps
 
-### 1. Raw Data Storage (S3)
-- Created an AWS S3 bucket to store raw datasets:  
-  `locations.csv`, `make_details.csv`, and `stolen_vehicles.csv`.
+### 1. Data Ingestion to Amazon S3
+- Created an S3 bucket to serve as the raw data lake layer.
+- Uploaded three source CSV files: vehicle thefts, location metadata, and make details.
 
-### 2. Data Cleaning with AWS Glue
-- Developed PySpark-based AWS Glue jobs to correct data formatting and cast columns to appropriate types for reliable ingestion.
+### 2. Batch ETL with AWS Glue (PySpark)
+- Developed multiple Glue jobs to clean and prepare each dataset.
+- Removed formatting issues (e.g., commas in numeric fields), parsed date formats, and cast data types for consistency.
+- Saved the cleaned datasets to structured S3 paths under `/clean/`.
 
-### 3. Schema Discovery using AWS Glue Crawler and Athena
-- Used Glue Crawlers to infer the schema automatically from cleaned data stored in S3.
-- Queried datasets through AWS Athena for validation and exploration.
+### 3. Schema Cataloging with AWS Glue Crawler + Athena
+- Configured Glue Crawlers to infer schema from the cleaned S3 data.
+- Created Data Catalog tables automatically and validated them using Athena.
+- Queried tables in Athena to preview schema and confirm row counts.
 
-### 4. Data Enrichment and Joining
-- Built an AWS Glue job to join cleaned datasets into an enriched final dataset.
-- Stored enriched outputs in S3 for warehousing.
+### 4. Data Enrichment with AWS Glue
+- Joined cleaned datasets (vehicles, makes, locations) using a dedicated Glue job.
+- Produced a single enriched dataset ready for analytical processing.
+- Saved enriched outputs to `s3://nz-crime-data-pipeline/final/enriched_vehicles/`.
 
-### 5. Loading into Snowflake
-- Loaded enriched CSV files into Snowflake staging tables using the COPY INTO command.
-- Verified ingestion and structure.
+### 5. Data Loading into Snowflake
+- Set up a Snowflake database and `STAGING` schema (`NZ_VEHICLE_THEFT.STAGING`).
+- Defined external stages and file formats to load from S3.
+- Used `COPY INTO` to ingest enriched data into Snowflake staging tables.
+- Ran SQL to confirm structure and record counts.
 ![snowflake](https://github.com/user-attachments/assets/049f89ad-74a6-4b5c-a6e7-f22e880b02a4)
 
 ### 6. Data Modeling and Testing with dbt Cloud
-- Built dbt models to transform and structure data into:
-  - Staging model (`stg_vehicle_data`)
-  - Dimension models (`dim_location`, `dim_make`)
-  - Fact model (`fact_vehicle_thefts`)
-- Applied dbt tests to validate data quality (`not_null`, `unique`).
+- Transformed raw data into staging, dimension, and fact models.
+- Built additional analytics models for exploring regional theft trends and vehicle age patterns.
+- Applied dbt tests (`not_null`, `unique`) to ensure data integrity.
+- Generated lineage graphs and documentation with dbt Docs.
 
 <img src="https://github.com/user-attachments/assets/d04c9c4e-2cbc-431a-964a-264b11d09a5f" alt="dbt" width="800"/>
 
 <img src="https://github.com/user-attachments/assets/15439b14-7377-483b-8856-ec1090138864" alt="dbtgraph" width="800"/>
 
 ### 7. Orchestration with Airflow (MWAA)
-- Created an Airflow DAG to:
-  - Sequentially execute AWS Glue ETL jobs.
-  - Trigger the dbt Cloud job for modeling after data loading.
-- Successfully tested both manual runs and scheduled executions to ensure end-to-end automation.
+- Created an Airflow DAG to orchestrate the pipeline from start to finish.
+- DAG executes the 4 Glue jobs sequentially, then triggers the dbt Cloud job.
+- Successfully tested manual runs and scheduled executions (e.g., every 10 minutes).
 ![running on scheduled](https://github.com/user-attachments/assets/7bf66643-be8e-4716-b77b-d09239bbb8b9)
 
 ![airflow graph](https://github.com/user-attachments/assets/ae3b9c47-9104-4982-a5f5-efb224233077)
