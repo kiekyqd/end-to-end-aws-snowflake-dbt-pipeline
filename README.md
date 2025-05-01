@@ -26,6 +26,8 @@ The pipeline processes raw CSV data through AWS services and Snowflake, with orc
 This project follows a modular, cloud-native architecture that ensures scalability, reliability, and automation across all stages of the data pipeline.
 The pipeline is designed to efficiently process raw CSV data into structured warehouse tables using a combination of AWS services, Snowflake, dbt Cloud, and Apache Airflow (MWAA).
 
+![diagram](https://github.com/user-attachments/assets/1be816bf-ee36-42b2-92f5-6ae87718a38b)
+
 ### Key Components:
 - **AWS S3** acts as the raw and cleaned data storage layer.
 
