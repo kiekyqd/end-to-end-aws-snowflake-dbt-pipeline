@@ -1,10 +1,2 @@
-# Mark all .sql files as SQL code so GitHub counts them in the language bar
-*.sql linguist-language=SQL
-
-# Treat Jupyter Notebooks as documentation, not code
-*.ipynb linguist-documentation
-
-# Exclude auto-generated folders from affecting language stats
-logs/ linguist-vendored
-target/ linguist-vendored
-dbt_packages/ linguist-vendored
+*.sql linguist-detectable=true
+*.sql linguist-language=sql
