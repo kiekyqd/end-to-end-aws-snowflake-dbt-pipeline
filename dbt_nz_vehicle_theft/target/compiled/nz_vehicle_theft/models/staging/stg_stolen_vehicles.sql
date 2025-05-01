@@ -1,3 +1,0 @@
--- models/stg_vehicle_cleaned.sql
-SELECT * 
-FROM NZ_VEHICLE_THEFT.STAGING.STG_STOLEN_VEHICLES
